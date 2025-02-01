@@ -1,0 +1,11 @@
+query Deployments($input: DeploymentListInput!) {
+    deployments(input: $input) {
+      edges {
+        node {
+          id
+          createdAt
+          status
+        }
+      }
+    }
+}

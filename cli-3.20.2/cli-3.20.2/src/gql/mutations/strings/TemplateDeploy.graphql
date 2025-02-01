@@ -1,0 +1,18 @@
+mutation TemplateDeploy(
+  $projectId: String!
+  $environmentId: String!
+  $templateId: String!
+  $serializedConfig: SerializedTemplateConfig!
+) {
+  templateDeployV2(
+    input: {
+      projectId: $projectId
+      environmentId: $environmentId
+      templateId: $templateId
+      serializedConfig: $serializedConfig
+    }
+  ) {
+    projectId
+    workflowId
+  }
+}
