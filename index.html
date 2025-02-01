@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,6 +23,10 @@
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+        button:active {
+            transform: rotate(360deg);
         }
         .result-container {
             margin-top: 20px;
@@ -39,10 +44,17 @@
             font-weight: bold;
             border-radius: 10px;
             border: 2px solid black;
+            transition: background-color 1s ease-in-out;
         }
         .red { background-color: #ff4d4d; }
         .yellow { background-color: #ffcc00; }
         .green { background-color: #4caf50; }
+        #correct-guesses {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -57,6 +69,8 @@
         <div id="phoneme" class="category">Least Used Phoneme</div>
         <div id="region" class="category">Region</div>
     </div>
+    
+    <div id="correct-guesses"></div>
 
     <script>
         async function submitGuess() {
@@ -66,12 +80,12 @@
                 return;
             }
             
-            const response = await fetch("https://langio-production.up.railway.app/guess", { 
+            const response = await fetch("https://langio-production.up.railway.app/guess", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ language: userGuess })
             });
-
+            
             const data = await response.json();
             if (data.error) {
                 alert(data.error);
@@ -83,6 +97,16 @@
             document.getElementById("syntax").className = `category ${data.syntax}`;
             document.getElementById("phoneme").className = `category ${data.least_used_phoneme}`;
             document.getElementById("region").className = `category ${data.region}`;
+            
+            const correctGuessesDiv = document.getElementById("correct-guesses");
+            correctGuessesDiv.innerHTML = "";
+            
+            if (data.correct_attributes && Object.keys(data.correct_attributes).length > 0) {
+                correctGuessesDiv.innerHTML = "<strong>Correct Guesses:</strong><br>";
+                for (const [key, value] of Object.entries(data.correct_attributes)) {
+                    correctGuessesDiv.innerHTML += `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}<br>`;
+                }
+            }
         }
     </script>
 </body>
