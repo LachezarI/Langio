@@ -25,6 +25,7 @@ def get_similarity_color(correct_value, guess_value):
         return "red"
 
 @app.route("/guess", methods=["POST"])
+
 def guess_language():
     user_guess = request.json.get("language", "").strip()
     guessed_language = next((lang for lang in LANGUAGES if lang["name"].lower() == user_guess.lower()), None)
