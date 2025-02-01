@@ -61,32 +61,32 @@
 
     <script>
         async function submitGuess() {
-            const userGuess = document.getElementById("guessInput").value;
+    const userGuess = document.getElementById("guessInput").value;
 
-            if (!userGuess) {
-                alert("Please enter a language!");
-                return;
-            }
+    if (!userGuess) {
+        alert("Please enter a language!");
+        return;
+    }
 
-            const response = await fetch("http://127.0.0.1:5000/guess", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ language: userGuess })
-            });
+    const response = await fetch("langio-production.up.railway.app", { 
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ language: userGuess })
+    });
 
-            const data = await response.json();
+    const data = await response.json();
 
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
+    if (data.error) {
+        alert(data.error);
+        return;
+    }
 
-            document.getElementById("group").className = `category ${data.group}`;
-            document.getElementById("morphology").className = `category ${data.morphology}`;
-            document.getElementById("syntax").className = `category ${data.syntax}`;
-            document.getElementById("phoneme").className = `category ${data.least_used_phoneme}`;
-            document.getElementById("region").className = `category ${data.region}`;
-        }
+    document.getElementById("group").className = `category ${data.group}`;
+    document.getElementById("morphology").className = `category ${data.morphology}`;
+    document.getElementById("syntax").className = `category ${data.syntax}`;
+    document.getElementById("phoneme").className = `category ${data.least_used_phoneme}`;
+    document.getElementById("region").className = `category ${data.region}`;
+}
     </script>
 
 </body>
