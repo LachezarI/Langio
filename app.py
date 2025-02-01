@@ -1,4 +1,3 @@
-
 from flask import Flask, request, jsonify
 import random
 import time
@@ -21,12 +20,12 @@ LANGUAGES = [
 
 # Store the last chosen language and reset every 24 hours
 LAST_LANGUAGE_TIME = 0
-correct_language = {}
+correct_language = None
 
 def choose_daily_language():
     global LAST_LANGUAGE_TIME, correct_language
     current_time = int(time.time())
-    if current_time - LAST_LANGUAGE_TIME > 86400:  # 24 hours in seconds
+    if correct_language is None or current_time - LAST_LANGUAGE_TIME > 86400:  # 24 hours in seconds
         correct_language = random.choice(LANGUAGES)
         LAST_LANGUAGE_TIME = current_time
 
