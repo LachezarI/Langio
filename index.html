@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Langio</title>
+    <title>Guess the Language</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -46,7 +46,6 @@
     </style>
 </head>
 <body>
-
     <h1>Guess the Language</h1>
     <input type="text" id="guessInput" placeholder="Enter a language">
     <button onclick="submitGuess()">Submit</button>
@@ -61,33 +60,30 @@
 
     <script>
         async function submitGuess() {
-    const userGuess = document.getElementById("guessInput").value;
-
-    if (!userGuess) {
-        alert("Please enter a language!");
-        return;
-    }
-
-    const response = await fetch("langio-production.up.railway.app", { 
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ language: userGuess })
-    });
-
-    const data = await response.json();
-
-    if (data.error) {
-        alert(data.error);
-        return;
-    }
-
-    document.getElementById("group").className = `category ${data.group}`;
-    document.getElementById("morphology").className = `category ${data.morphology}`;
-    document.getElementById("syntax").className = `category ${data.syntax}`;
-    document.getElementById("phoneme").className = `category ${data.least_used_phoneme}`;
-    document.getElementById("region").className = `category ${data.region}`;
-}
+            const userGuess = document.getElementById("guessInput").value.trim();
+            if (!userGuess) {
+                alert("Please enter a language!");
+                return;
+            }
+            
+            const response = await fetch("langio-production.up.railway.app", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ language: userGuess })
+            });
+            
+            const data = await response.json();
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+            
+            document.getElementById("group").className = `category ${data.group}`;
+            document.getElementById("morphology").className = `category ${data.morphology}`;
+            document.getElementById("syntax").className = `category ${data.syntax}`;
+            document.getElementById("phoneme").className = `category ${data.least_used_phoneme}`;
+            document.getElementById("region").className = `category ${data.region}`;
+        }
     </script>
-
 </body>
 </html>
