@@ -3,18 +3,9 @@ import random
 from flask_cors import CORS
 
 app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return "Hello, Langio is running!"
-
-if __name__ == "__main__":
-    app.run()
-
-app = Flask(__name__)
 CORS(app)
 
-# Language dataset
+# Sample language data
 LANGUAGES = [
     {"name": "Spanish", "group": "Indo-European", "morphology": "Fusional", "syntax": "SVO", "least_used_phoneme": "/ʒ/", "region": "Europe, Americas"},
     {"name": "Japanese", "group": "Japonic", "morphology": "Agglutinative", "syntax": "SOV", "least_used_phoneme": "/f/", "region": "East Asia"},
@@ -22,25 +13,25 @@ LANGUAGES = [
     {"name": "Turkish", "group": "Turkic", "morphology": "Agglutinative", "syntax": "SOV", "least_used_phoneme": "/ʒ/", "region": "Anatolia, Central Asia"},
 ]
 
-# Pick a random language for the game
+# Pick a random language when the server starts
 correct_language = random.choice(LANGUAGES)
 
 def get_similarity_color(correct_value, guess_value):
     if correct_value == guess_value:
-        return "green"  # Exact match
+        return "green"
     elif correct_value in guess_value or guess_value in correct_value:
-        return "yellow"  # Some similarity
+        return "yellow"
     else:
-        return "red"  # No similarity
+        return "red"
 
 @app.route("/guess", methods=["POST"])
 def guess_language():
     user_guess = request.json.get("language", "").strip()
     guessed_language = next((lang for lang in LANGUAGES if lang["name"].lower() == user_guess.lower()), None)
-    
+
     if not guessed_language:
         return jsonify({"error": "Language not found"}), 400
-    
+
     response = {
         "group": get_similarity_color(correct_language["group"], guessed_language["group"]),
         "morphology": get_similarity_color(correct_language["morphology"], guessed_language["morphology"]),
@@ -48,8 +39,8 @@ def guess_language():
         "least_used_phoneme": get_similarity_color(correct_language["least_used_phoneme"], guessed_language["least_used_phoneme"]),
         "region": get_similarity_color(correct_language["region"], guessed_language["region"]),
     }
-    
+
     return jsonify(response)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
